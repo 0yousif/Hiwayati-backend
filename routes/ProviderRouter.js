@@ -5,5 +5,6 @@ router.get('/provider',controller.GetProviders)
 router.get('/provider/:provider_id',controller.GetProvider)
 
 router.post('/provider',controller.CreateProvider)
+router.put('/provider/:provider_id',controller.UpdateProvider)
 
 module.exports = router

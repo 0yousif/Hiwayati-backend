@@ -1,4 +1,5 @@
 const { Provider } = require("../models")
+const { statics } = require("../models/skill")
 
 const GetProviders = async (req, res) => {
   try {
@@ -30,10 +31,20 @@ const CreateProvider = async (req,res) => {
 
 }
 
+const UpdateProvider = async (req,res) => {
+  try {
+    const provider = Provider.findByIdAndUpdate({_id: req.params.provider_id})
+    res.status(200).send({msg: "provider Update", payload: req.params.provider_id, status:"Ok"})
+  } catch (error) {
+    throw error
+    
+  }
+}
 
 
 module.exports = {
   GetProviders,
   GetProvider,
-  CreateProvider
+  CreateProvider,
+  UpdateProvider
 }
