@@ -9,7 +9,7 @@ const participantSchema = new Schema({
   currentCourses: { typey: Array, required: true },
   previousCourses: { typey: Array, required: true },
   Scheduel: [
-    { name: { type: String, required: true } },
+    { name: { type: String, required: true } }, 
     { description: { type: String, required: true } },
     { time_date: { type: String, required: true } },
     { courses_id: { type: Schema.Types.ObjectId, ref: 'Course' } },
