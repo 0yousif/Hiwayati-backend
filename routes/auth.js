@@ -1,7 +1,7 @@
 const router = require("express").Router()
-const participantCtrl = require('../controllers/auth')
+const authCtrl = require('../controllers/auth')
 
-router.post('/SignUp',participantCtrl.SignUp)
-router.post('/SignIn',participantCtrl.SignIn)
-
+router.post('/SignUp',authCtrl.SignUp)
+router.post('/SignIn',authCtrl.SignIn)
+router.put('/Edit/:id',authCtrl.Update)
 module.exports = router
