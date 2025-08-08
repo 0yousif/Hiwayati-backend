@@ -3,7 +3,7 @@ const express = require('express')
 require('dotenv').config()
 const session = require('express-session')
 const path = require('path')
-
+const cors = require("cors")
 
 // Initialize app
 const app = express()
@@ -22,9 +22,11 @@ const morgan = require('morgan')
 
 
 // use MiddleWares
+app.use(cors())
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(morgan('dev'))
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(morgan("dev"))
+app.use(express.static(path.join(__dirname, "public")))
 
 
 
@@ -46,10 +48,10 @@ app.get('/', (req, res) => {
 })
 
 // Require Routers
-
+const coursesRouter = require("./routes/courses")
 
 // use Routers
-
+app.use("/course",coursesRouter)
 
 // Listener
 app.listen(port, ()=>{
