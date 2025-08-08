@@ -1,10 +1,19 @@
 const { Skill } = require("../models")
 const { param } = require("../routes/skillRouter")
 
-const GetSkill = async (req, res) => {
+const GetSkills = async (req, res) => {
   try {
     const skills = await Skill.find({})
     res.status(200).send(skills)
+  } catch (error) {
+    throw error
+  }
+}
+
+const GetSkill = async (req,res) => {
+  try {
+    const skill = await Skill.findById(req.params.skill_id)
+    res.status(200).send(skill)
   } catch (error) {
     throw error
   }
@@ -41,6 +50,7 @@ const DeleteSkill = async (req,res) => {
 }
 
 module.exports = {
+  GetSkills,
   GetSkill,
   CreateSkill,
   UpdateSkill,
