@@ -57,7 +57,7 @@ const verifyToken = (req, res, next) => {
     console.log(error)
     res.status(401).send({ status: "Error", msg: "Verify Token Error!" })
   }
-}
+} 
 
 module.exports = {
   hashPassword,
