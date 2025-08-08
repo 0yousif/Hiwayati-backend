@@ -38,7 +38,7 @@ const courseSchema = new mongoose.Schema({
       userType: {
         type: String,
         required: true,
-        enum: ["participant", "teacher"],
+        enum: ["Participant", "Teacher"],
       },
       userId: {
         type: mongoose.Types.ObjectId,
