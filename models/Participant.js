@@ -16,15 +16,15 @@ const participantSchema = new mongoose.Schema({
     required: true
   },
 
-  age: {
-    type: Number,
-    required: true
-  },
+  // age: {
+  //   type: Number,
+  //   required: true
+  // },
 
-  image: {
-    type: String,
-    required: true
-  },
+  // image: {
+  //   type: String,
+  //   required: true
+  // },
 
   currentCourses: {
     type: Array,
@@ -37,8 +37,11 @@ const participantSchema = new mongoose.Schema({
   },
   Scheduel: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Session'
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      time_date: { type: String, required: true },
+      courses_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+      place_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }
     }
   ],
 

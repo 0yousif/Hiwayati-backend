@@ -1,13 +1,24 @@
 const Participant =require('../models/Participant')
+const Teacher  = require('../models/Teacher')
 const middleware = require('../middleware/index')
 
 
 
-exports.SignUp =async (req,res) => { try {
+exports.SignUp =async (req,res) => { 
+  let userType
 
-    const {email, password, confirmPassword, username } = req.body
+  if(req.body.isTeacher==='on'){
+    userType= Teacher
+  }
+  else{
+    userType=Participant
+  }
+  
+  try {
 
-    let existingUsername=await Participant.findOne({ username })
+    const {email, password, confirmPassword, username,bio } = req.body
+
+    let existingUsername=await userType.findOne({ username })
     if (existingUsername){
     return res.status(400).send(' Username already taken! Please choose another one.')
   }
@@ -20,11 +31,11 @@ exports.SignUp =async (req,res) => { try {
     let passwordDigest = await middleware.hashPassword(password)
 
 
-    let existingEmail = await Participant.findOne({ email })
+    let existingEmail = await userType.findOne({ email })
     if (existingEmail) {
       return res.status(400).send("A user with that email has already been registered!")
     } else {
-      const user = await Participant.create({username, email, passwordDigest })
+      const user = await userType.create(req.body.isTeacher==="on"?{username,email,passwordDigest,bio}:{username, email, passwordDigest })
 
       res.status(200).send(user)
     }
@@ -34,16 +45,26 @@ exports.SignUp =async (req,res) => { try {
 }
 
 exports.SignIn = async (req,res)=>{
+  let userType
+
+  if(req.body.isTeacher==='on'){
+    userType= Teacher
+  }
+  else{
+    userType=Participant
+  }
+  
   try {
 
     const { email, password } = req.body
 
-    const user = await Participant.findOne({ email })
+    const user = await userType.findOne({ email })
 
     let matched = await middleware.comparePassword(password,
       user.passwordDigest
     )
-
+    
+    
     if (matched) {
       let payload = {
         username: user.username,

@@ -44,11 +44,11 @@ app.get('/', (req, res) => {
 
 // Require Routers
 const coursesRouter = require('./routes/courses')
-const participantRouter = require('./routes/participant')
+const authRouter = require('./routes/auth')
 
 // use Routers
 // app.use('/course', coursesRouter)
-app.use('/participant', participantRouter)
+app.use('/auth', authRouter)
 
 // Listener
 app.listen(port, () => {
