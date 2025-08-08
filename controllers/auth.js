@@ -1,23 +1,26 @@
 const Participant = require("../models/Participant")
-const middleware = require("../middleware/index")
 const Teacher = require("../models/Teacher")
+const middleware = require("../middleware/index")
 
 exports.SignUp = async (req, res) => {
-  let userDocument
-  
+  let userType
+
   if (req.body.isTeacher === "on") {
-    userDocument= Teacher
+    userType = Teacher
+  } else {
+    userType = Participant
+  }
+
+  let existingUsername = await userType.findOne({ username })
+  if (existingUsername) {
+    return res
+      .status(400)
+      .send(" Username already taken! Please choose another one.")
   }
 
   try {
-    const { email, password, confirmPassword, username } = req.body
+    const { email, password, confirmPassword, username, bio } = req.body
 
-    let existingUsername = await userDocument.findOne({ username })
-    if (existingUsername) {
-      return res
-        .status(400)
-        .send(" Username already taken! Please choose another one.")
-    }
 
     if (password !== confirmPassword || password === "") {
       return res.status(400).send("Password must match")
@@ -25,13 +28,17 @@ exports.SignUp = async (req, res) => {
 
     let passwordDigest = await middleware.hashPassword(password)
 
-    let existingEmail = await userDocument.findOne({ email })
+    let existingEmail = await userType.findOne({ email })
     if (existingEmail) {
       return res
         .status(400)
         .send("A user with that email has already been registered!")
     } else {
-      const user = await Participant.create({ username, email, passwordDigest })
+      const user = await userType.create(
+        req.body.isTeacher === "on"
+          ? { username, email, passwordDigest, bio }
+          : { username, email, passwordDigest }
+      )
 
       res.status(200).send(user)
     }
@@ -41,11 +48,18 @@ exports.SignUp = async (req, res) => {
 }
 
 exports.SignIn = async (req, res) => {
+  let userType
+
+  if (req.body.isTeacher === "on") {
+    userType = Teacher
+  } else {
+    userType = Participant
+  }
+
   try {
-    console.log("dvfdv")
     const { email, password } = req.body
 
-    const user = await Participant.findOne({ email })
+    const user = await userType.findOne({ email })
 
     let matched = await middleware.comparePassword(
       password,
