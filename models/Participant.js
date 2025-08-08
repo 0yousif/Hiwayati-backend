@@ -15,7 +15,7 @@ const participantSchema = new Schema({
     { courses_id: { type: Schema.Types.ObjectId, ref: 'Course' } },
     { place_id: { type: Schema.Types.ObjectId, ref: 'Provider' } }
   ],
-  skills: { typey: Array, required: true }
+  skills: { type: Array, required: true }
 })
 
-module.exports = participantSchema
+module.exports = participantSchema 

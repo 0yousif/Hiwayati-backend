@@ -1,10 +1,15 @@
 const mongoose = require('mongoose')
-const userSchema = require('./User')
-const postSchema = require('./Post')
 
-const User = mongoose.model('User', userSchema)
-const Post = mongoose.model('Post', postSchema)
+
+//Jawad
+const skillSchema = require('./skill')
+const providerSchema= require('./provider')
+
+const Skill = mongoose.model('Skill', skillSchema)
+const Provider = mongoose.model('Provider', providerSchema)
 
 module.exports = {
-  
+
+  Skill,
+  Provider,
 }

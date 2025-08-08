@@ -5,6 +5,8 @@ const session = require('express-session')
 const path = require('path')
 
 
+
+
 // Initialize app
 const app = express()
 
@@ -46,10 +48,11 @@ app.get('/', (req, res) => {
 })
 
 // Require Routers
+const skillRouter = require('./routes/skillRouter')
 
 
 // use Routers
-
+app.use('/',skillRouter)
 
 // Listener
 app.listen(port, ()=>{
