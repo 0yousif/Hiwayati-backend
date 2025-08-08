@@ -35,7 +35,7 @@ exports.SignUp =async (req,res) => { try {
 
 exports.SignIn = async (req,res)=>{
   try {
-console.log('dvfdv')
+
     const { email, password } = req.body
 
     const user = await Participant.findOne({ email })
