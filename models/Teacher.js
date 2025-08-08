@@ -15,5 +15,5 @@ const teacherSchema = new Schema({
     { place_id: { type: Schema.Types.ObjectId, ref: 'Provider' } }
   ]
 })
-
+ 
 module.exports = teacherSchema
