@@ -26,15 +26,9 @@ const participantSchema = new mongoose.Schema({
   //   required: true
   // },
 
-  currentCourses: {
-    type: Array,
-    required: true
-  },
+  currentCourses:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
 
-  previousCourses: {
-    type: Array,
-    required: true
-  },
+  previousCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   Scheduel: [
     {
       name: { type: String, required: true },
@@ -45,10 +39,7 @@ const participantSchema = new mongoose.Schema({
     }
   ],
 
-  skills: {
-    type: Array,
-    required: true
-  }
+  skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
 })
 
 const Participant = mongoose.model('Participant', participantSchema)

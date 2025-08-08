@@ -5,9 +5,12 @@ const session = require('express-session')
 const path = require('path')
 const cors = require('cors')
 
+
+
 // Initialize app
 const app = express()
-
+//fix error when post :ValidationError 
+app.use(express.json())
 // Database Configuration
 const mongoose = require('./config/db')
 
@@ -43,12 +46,18 @@ app.get('/', (req, res) => {
 })
 
 // Require Routers
+
+const skillRouter = require('./routes/skillRouter')
+const providerRouter = require('./routes/ProviderRouter')
 const coursesRouter = require('./routes/courses')
 const authRouter = require('./routes/auth')
 
 // use Routers
-// app.use('/course', coursesRouter)
+app.use('/skill',skillRouter)
+app.use('/provider',providerRouter)
+app.use('/course', coursesRouter)
 app.use('/auth', authRouter)
+
 
 // Listener
 app.listen(port, () => {
