@@ -3,7 +3,7 @@ const express = require('express')
 require('dotenv').config()
 const session = require('express-session')
 const path = require('path')
-
+const cors = require('cors')
 
 
 
@@ -20,16 +20,14 @@ const port = process.env.PORT ? process.env.PORT : 3000
 // Require MiddleWares
 const morgan = require('morgan')
 
-
 // Require passUserToView & isSignedIn middlewares
 
-
 // use MiddleWares
+app.use(cors())
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
-
-
 
 // Session Configurations
 app.use(
@@ -42,22 +40,26 @@ app.use(
 
 //passUserToView middleware
 
-
 // Root Route
 app.get('/', (req, res) => {
   res.send('Your app is connected . . . ')
 })
 
 // Require Routers
+
 const skillRouter = require('./routes/skillRouter')
 const ProviderRouter = require('./routes/ProviderRouter')
+const coursesRouter = require('./routes/courses')
+const authRouter = require('./routes/auth')
 
 // use Routers
 app.use('/',skillRouter)
 app.use('/',ProviderRouter)
+app.use('/course', coursesRouter)
+app.use('/auth', authRouter)
 
 
 // Listener
-app.listen(port, ()=>{
+app.listen(port, () => {
   console.log(`server is running on port ${port}`)
 })
