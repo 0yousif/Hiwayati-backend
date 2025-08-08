@@ -5,8 +5,8 @@ router.get('/skill',controller.GetSkills)
 router.get('/skill/:skill_id',controller.GetSkill)
 
 router.post('/skill',controller.CreateSkill)
-router.put('/skill/:skill_id',controller.UpdateSkill)
+router.put('/skill/:skill_id/edit',controller.UpdateSkill)
 
-router.delete('/skill/:skill_id',controller.DeleteSkill)
+router.delete('/skill/:skill_id/delete',controller.DeleteSkill)
 
 module.exports = router
