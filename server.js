@@ -47,7 +47,7 @@ const coursesRouter = require('./routes/courses')
 const participantRouter = require('./routes/participant')
 
 // use Routers
-app.use('/course', coursesRouter)
+// app.use('/course', coursesRouter)
 app.use('/participant', participantRouter)
 
 // Listener
