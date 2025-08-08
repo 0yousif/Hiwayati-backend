@@ -1,6 +1,6 @@
-const { Schema } = require('mongoose')
+const mongoose = require('mongoose')
 
-const participantSchema = new Schema({
+const participantSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   passwordDigest: { type: String, required: true },
@@ -18,4 +18,6 @@ const participantSchema = new Schema({
   skills: { typey: Array, required: true }
 })
 
-module.exports = participantSchema
+const Participant = mongoose.model('Participant',participantSchema)
+
+module.exports = Participant
