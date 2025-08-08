@@ -1,11 +1,30 @@
 {
+  "name": "hiwayati-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0yousif/Hiwayati-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/0yousif/Hiwayati-backend/issues"
+  },
+  "homepage": "https://github.com/0yousif/Hiwayati-backend#readme",
+  "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0",
-    "morgan": "^1.10.1"
+    "mongoose": "^8.17.1",
+    "morgan": "^1.10.1",
+    "path": "^0.12.7"
   }
 }
