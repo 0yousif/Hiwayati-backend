@@ -6,14 +6,12 @@ const teacherSchema = new mongoose.Schema({
   passwordDigest: { type: String, required: true },
   image: { type: String, required: true },
   bio: { type: String, required: true },
-  courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+  courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   Scheduel: [
-    { name: { type: String, required: true } },
-    { description: { type: String, required: true } },
-    { time_date: { type: String, required: true } },
-    { courses_id: { type: Schema.Types.ObjectId, ref: 'Course' } },
-    { place_id: { type: Schema.Types.ObjectId, ref: 'Provider' } }
-  ]
+        {
+          type: mongoose.Schema.Types.ObjectId, ref:'Session'
+        }
+      ],
 })
 
 const Teacher = mongoose.model('Teacher',teacherSchema)

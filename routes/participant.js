@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const participantCtrl = require('../controllers/participant')
 
+router.post('/SignUp',participantCtrl.SignUp)
 
-router.get('/participant',participantCtrl.participant_signup_get)
-router.post('/participant',participantCtrl.participant_signup_post)
+module.exports = router
