@@ -50,10 +50,12 @@ app.get('/', (req, res) => {
 
 // Require Routers
 const skillRouter = require('./routes/skillRouter')
-
+const ProviderRouter = require('./routes/ProviderRouter')
 
 // use Routers
 app.use('/',skillRouter)
+app.use('/',ProviderRouter)
+
 
 // Listener
 app.listen(port, ()=>{
