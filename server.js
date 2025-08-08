@@ -9,7 +9,8 @@ const path = require('path')
 
 // Initialize app
 const app = express()
-
+//fix error when post :ValidationError 
+app.use(express.json())
 // Database Configuration
 const mongoose = require('./config/db')
 

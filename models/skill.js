@@ -1,9 +1,9 @@
 const { Schema } = require("mongoose")
 
 const skillSchema = new Schema({
-  name: { type: String, require: true },
-  description: { type: String, require: true },
-  courses: { type: Array, require: true },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  courses: { type: Array, required: true },
 })
 
 module.exports = skillSchema
