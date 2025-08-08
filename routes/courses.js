@@ -1,5 +1,5 @@
-// const router = require("express").Router()
-// const courseCtrl = require("./../controllers/courses")
+const router = require("express").Router()
+const courseCtrl = require("./../controllers/courses")
 
 
 router.post("/", courseCtrl.courses_create_post)
