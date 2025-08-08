@@ -1,12 +1,12 @@
-const router = require('express').Router()
-const controller = require('../controllers/skillController')
+const router = require("express").Router()
+const controller = require("../controllers/skillController")
 
-router.get('/skill',controller.GetSkills)
-router.get('/skill/:skill_id',controller.GetSkill)
+router.get("/", controller.GetSkills)
+router.get("/:skill_id", controller.GetSkill)
 
-router.post('/skill',controller.CreateSkill)
-router.put('/skill/:skill_id/edit',controller.UpdateSkill)
+router.post("/", controller.CreateSkill)
+router.put("/:skill_id/edit", controller.UpdateSkill)
 
-router.delete('/skill/:skill_id/delete',controller.DeleteSkill)
+router.delete("/:skill_id/delete", controller.DeleteSkill)
 
 module.exports = router

@@ -48,13 +48,13 @@ app.get('/', (req, res) => {
 // Require Routers
 
 const skillRouter = require('./routes/skillRouter')
-const ProviderRouter = require('./routes/ProviderRouter')
+const providerRouter = require('./routes/ProviderRouter')
 const coursesRouter = require('./routes/courses')
 const authRouter = require('./routes/auth')
 
 // use Routers
-app.use('/',skillRouter)
-app.use('/',ProviderRouter)
+app.use('/skill',skillRouter)
+app.use('/provider',providerRouter)
 app.use('/course', coursesRouter)
 app.use('/auth', authRouter)
 

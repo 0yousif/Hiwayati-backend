@@ -14,4 +14,4 @@ router.post("/:id/messages",courseCtrl.messages_create_post)
 router.get("/:id/messages", courseCtrl.messages_readAll_get)
 // router.delete("/:id/messages/:messageId", courseCtrl.messages_delete_delete)
 
-// module.exports = router
+module.exports = router
