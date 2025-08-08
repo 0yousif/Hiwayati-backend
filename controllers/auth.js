@@ -5,6 +5,7 @@ const middleware = require('../middleware/index')
 
 
 exports.SignUp =async (req,res) => { 
+
   let userType
 
   if(req.body.isTeacher==='on'){
@@ -79,5 +80,44 @@ exports.SignIn = async (req,res)=>{
   } catch (error) {
     console.log(error)
     res.status(401).send({ status: 'Error', msg: 'An error has occurred logging in!' })
+  }
+}
+
+exports.Update = async (req, res) => {
+
+  try {
+
+    const { oldPassword, newPassword  } = req.body
+
+    let user = await Teacher.findById(req.params.id);
+    let userType = Teacher
+
+    if (!user) {
+      user = await Participant.findById(req.params.id)
+      userType = Participant
+    }
+    let matched = await middleware.comparePassword(
+      oldPassword,
+      user.passwordDigest
+    )
+    if (matched) {
+      let passwordDigest = await middleware.hashPassword(newPassword)
+      user = await userType.findByIdAndUpdate(req.params.id, {
+        passwordDigest
+      })
+      let payload = {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+      return res.status(200).send({ status: 'Password Updated!', user: payload })
+    }
+    res.status(401).send({ status: 'Error', msg: 'Old Password did not match!' })
+  } catch (error) {
+    console.log(error)
+    res.status(401).send({
+      status: 'Error',
+      msg: 'An error has occurred updating password!'
+    })
   }
 }
