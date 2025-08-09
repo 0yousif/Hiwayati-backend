@@ -13,13 +13,7 @@ exports.SignUp = async (req, res) => {
     userType = Participant
   }
 
-  let existingUsername = await userType.findOne({ username })
-  if (existingUsername) {
-    return res
-      .status(400)
-      .send(" Username already taken! Please choose another one.")
-  }
-
+  
   try {
     const { email, password, confirmPassword, username, bio } = req.body
 
@@ -29,6 +23,13 @@ exports.SignUp = async (req, res) => {
     }
 
     let passwordDigest = await middleware.hashPassword(password)
+
+let existingUsername = await userType.findOne({ username })
+  if (existingUsername) {
+    return res
+      .status(400)
+      .send(" Username already taken! Please choose another one.")
+  }
 
     let existingEmail = await userType.findOne({ email })
     if (existingEmail) {
@@ -76,7 +77,7 @@ exports.SignIn = async (req, res) => {
       }
 
       let token = middleware.createToken(payload)
-      return res.status(200).send({ user: payload, token })
+      res.status(200).send({ user: payload, token })
     }
     res.status(401).send({ status: "Error", msg: "Unauthorized" })
   } catch (error) {
@@ -91,12 +92,11 @@ exports.SignIn = async (req, res) => {
 exports.Update = async (req, res) => {
 
   try {
-
+    
     const { oldPassword, newPassword  } = req.body
-
+    
     let user = await Teacher.findById(req.params.id);
     let userType = Teacher
-
     if (!user) {
       user = await Participant.findById(req.params.id)
       userType = Participant
@@ -105,6 +105,7 @@ exports.Update = async (req, res) => {
       oldPassword,
       user.passwordDigest
     )
+    if(res.locals.payload.id===user.id){
     if (matched) {
       let passwordDigest = await middleware.hashPassword(newPassword)
       user = await userType.findByIdAndUpdate(req.params.id, {
@@ -112,12 +113,14 @@ exports.Update = async (req, res) => {
       })
       let payload = {
         id: user._id,
-        name: user.name,
         email: user.email
       }
+      
       return res.status(200).send({ status: 'Password Updated!', user: payload })
-    }
-    res.status(401).send({ status: 'Error', msg: 'Old Password did not match!' })
+    }else{
+    return res.status(400).send({ status: 'Error', msg: 'Old Password did not match!' })}
+  } res.status(401).send({ status: 'Error', msg: "You can't edit this profile" })
+  
   } catch (error) {
     console.log(error)
     res.status(401).send({
@@ -130,13 +133,21 @@ exports.Update = async (req, res) => {
 exports.Delete = async (req, res) => {
 
   try {
-    let user = await Teacher.findByIdAndDelete(req.params.id);
     
-    if (!user) {
-      user = await Participant.findByIdAndDelete(req.params.id)
+      
+    let isUser = await Teacher.findById(req.params.id);
+    
+    if (!isUser) {
+      isUser = await Participant.findById(req.params.id)
     }
-  
-    res.status(200).send({ status: "User Delete!"})
+    
+    if(res.locals.payload.id===isUser.id){
+    
+    await userType.findByIdAndDelete(req.params.id)
+    
+    return res.status(200).send({ status: "User Delete!"})
+
+  } res.status(401).send({ status: 'Error', msg: "You can't delete thi user" })
   } catch (error) {
     
     res.status(401).send({
