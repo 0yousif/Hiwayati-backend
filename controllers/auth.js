@@ -3,7 +3,7 @@ const Teacher = require("../models/Teacher")
 const middleware = require("../middleware/index")
 
 
-exports.SignUp = async (req, res) => {
+exports.auth_signUp_put = async (req, res) => {
 
   let userType
 
@@ -12,12 +12,12 @@ exports.SignUp = async (req, res) => {
   } else {
     userType = Participant
   }
-
+  
   
   try {
     const { email, password, confirmPassword, username, bio } = req.body
-
-
+  
+  
     if (password !== confirmPassword || password === "") {
       return res.status(400).send("Password must match")
     }
@@ -49,10 +49,10 @@ let existingUsername = await userType.findOne({ username })
     throw error
   }
 }
-
-exports.SignIn = async (req, res) => {
+  
+exports.auth_signIn_put = async (req, res) => {
   let userType
-
+  
   if (req.body.isTeacher === "on") {
     userType = Teacher
   } else {
@@ -89,13 +89,13 @@ exports.SignIn = async (req, res) => {
 }
 
 
-exports.Update = async (req, res) => {
+exports.auth_update_put = async (req, res) => {
 
   try {
     
     const { oldPassword, newPassword  } = req.body
     
-    let user = await Teacher.findById(req.params.id);
+    let user = await Teacher.findById(req.params.id)
     let userType = Teacher
     if (!user) {
       user = await Participant.findById(req.params.id)
@@ -130,7 +130,7 @@ exports.Update = async (req, res) => {
   }
 }
 
-exports.Delete = async (req, res) => {
+exports.auth_delete_delete = async (req, res) => {
 
   try {
     
@@ -161,4 +161,19 @@ exports.Delete = async (req, res) => {
 exports.CheckSession = async (req, res) => {
   const { payload } = res.locals
   res.status(200).send(payload)
+}
+exports.auth_profile_get = async (req, res) => {
+  try{
+    let user = await Teacher.findById(req.params.id)
+    
+    if (!user) {
+      user = await Participant.findById(req.params.id)
+    
+    }
+    res.status(200).send(user) 
+
+}
+catch (error) {
+    throw error
+  }
 }
