@@ -126,5 +126,23 @@ exports.Update = async (req, res) => {
     })
   }
 }
-=======
 
+exports.Delete = async (req, res) => {
+
+  try {
+    let user = await Teacher.findByIdAndDelete(req.params.id);
+    
+    if (!user) {
+      user = await Participant.findByIdAndDelete(req.params.id)
+    }
+  
+    res.status(200).send({ status: "User Delete!"})
+  } catch (error) {
+    
+    res.status(401).send({
+      status: "Error",
+      msg: "An error has occurred while deleting user"
+    })
+  }
+
+}
