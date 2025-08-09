@@ -146,3 +146,8 @@ exports.Delete = async (req, res) => {
   }
 
 }
+
+exports.CheckSession = async (req, res) => {
+  const { payload } = res.locals
+  res.status(200).send(payload)
+}

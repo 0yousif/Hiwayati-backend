@@ -5,4 +5,5 @@ router.post('/SignUp',authCtrl.SignUp)
 router.post('/SignIn',authCtrl.SignIn)
 router.put('/Edit/:id',authCtrl.Update)
 router.delete('/Delete/:id',authCtrl.Delete)
+router.get('/session',authCtrl.CheckSession)
 module.exports = router
