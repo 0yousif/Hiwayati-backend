@@ -41,12 +41,8 @@ const participantSchema = new mongoose.Schema({
   ],
   Scheduel: [
     {
-      name: { type: String, required: true },
-      description: { type: String, required: true },
-      time_date: { type: String, required: true },
-      courses_id: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
-      place_id: { type: mongoose.Schema.Types.ObjectId, ref: "Provider" },
-    },
+      type: mongoose.Schema.Types.ObjectId, ref:'Event'
+    }
   ],
 
   skills: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],

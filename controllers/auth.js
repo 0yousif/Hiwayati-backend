@@ -2,8 +2,9 @@ const Participant = require("../models/Participant")
 const Teacher = require("../models/Teacher")
 const middleware = require("../middleware/index")
 
+
 exports.auth_signUp_post = async (req, res) => {
-  
+
   let userType
 
   if (req.body.isTeacher) {
@@ -46,9 +47,8 @@ exports.auth_signUp_post = async (req, res) => {
     throw error
   }
 }
-
+  
 exports.auth_signIn_post = async (req, res) => {
-  console.log(req.body)
   let userType
 
   if (req.body.isTeacher) {

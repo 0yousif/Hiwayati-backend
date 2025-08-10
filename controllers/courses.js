@@ -1,4 +1,5 @@
 const Course = require("../models/course")
+const Event = require("../models/Event")
 const Participant = require("../models/Participant")
 const Teacher = require("../models/Teacher")
 const { getUser } = require("../middleware/")
@@ -85,3 +86,22 @@ exports.messages_readAll_get = async (req, res) => {
     res.send(course.messages)
   } else return res.send("not found")
 }
+
+exports.event_create_post= async (req,res)=>{
+  const newEvent= await Event.create(req.body)
+  await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent.id }})
+  res.send(newEvent)
+}
+exports.event_readOne_get=async (req,res)=>{
+  const event = await Event.findById(req.params.eventId)
+  return res.send(event)
+}
+
+// exports.event_deleteOne_delete = async (req, res) => {
+
+//   await Course.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId }})
+
+//   await Event.findByIdAndDelete(req.params.eventId)
+
+//   return res.send('delete')
+// }
