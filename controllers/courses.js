@@ -1,4 +1,5 @@
 const Course = require("../models/course")
+const Event = require("../models/Event")
 
 exports.courses_create_post = async (req, res) => {
   return res.send(await Course.create(req.body))
@@ -60,3 +61,14 @@ exports.messages_readAll_get = async (req, res) => {
     res.send(course.messages)
   } else return res.send("not found")
 }
+
+exports.event_create_post= async (req,res)=>{
+  const newEvent= await Event.create(req.body)
+  await Event.findByIdAndUpdate(req.params.id,{$push:{events : newEvent._id }})
+  res.send(newEvent)
+}
+
+
+// exports.event_deleteOne_delete = async (req, res) => {
+//   await Event.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId}})
+// }

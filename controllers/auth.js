@@ -3,7 +3,7 @@ const Teacher = require("../models/Teacher")
 const middleware = require("../middleware/index")
 
 
-exports.auth_signUp_put = async (req, res) => {
+exports.auth_signUp_post = async (req, res) => {
 
   let userType
 
@@ -50,7 +50,7 @@ let existingUsername = await userType.findOne({ username })
   }
 }
   
-exports.auth_signIn_put = async (req, res) => {
+exports.auth_signIn_post = async (req, res) => {
   let userType
   
   if (req.body.isTeacher === "on") {

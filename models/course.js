@@ -48,8 +48,11 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      
     },
   ],
+  events:[{type : mongoose.Schema.Types.ObjectId, ref: 'Event'}]
+      
 })
 
 const Course = mongoose.model("Course", courseSchema)

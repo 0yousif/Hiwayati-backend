@@ -14,4 +14,7 @@ router.post("/:id/messages",courseCtrl.messages_create_post)
 router.get("/:id/messages", courseCtrl.messages_readAll_get)
 // router.delete("/:id/messages/:messageId", courseCtrl.messages_delete_delete)
 
+router.post('/:id/event/:eventId',courseCtrl.event_create_post)
+
+
 module.exports = router
