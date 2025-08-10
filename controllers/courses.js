@@ -92,10 +92,10 @@ exports.event_create_post= async (req,res)=>{
   await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent.id }})
   res.send(newEvent)
 }
-// exports.event_readOne_get=async (req,res)=>{
-//   const event = await Event.findById(req.params.eventId)
-//   return res.send(event)
-// }
+exports.event_readOne_get=async (req,res)=>{
+  const event = await Event.findById(req.params.eventId)
+  return res.send(event)
+}
 
 // exports.event_deleteOne_delete = async (req, res) => {
 
