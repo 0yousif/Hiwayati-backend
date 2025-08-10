@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const teacherSchema = new mongoose.Schema({
 username: { type: String, required: true },
@@ -13,3 +13,4 @@ Scheduel: [{type: mongoose.Schema.Types.ObjectId,ref: 'Event'}]
 const Teacher = mongoose.model('Teacher', teacherSchema)
 
 module.exports = Teacher
+

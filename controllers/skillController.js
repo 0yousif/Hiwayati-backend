@@ -1,5 +1,6 @@
 const { Skill } = require("../models")
-const { param } = require("../routes/skillRouter")
+
+
 
 const GetSkills = async (req, res) => {
   try {

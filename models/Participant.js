@@ -1,19 +1,19 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const participantSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: true,
   },
 
   email: {
     type: String,
-    required: true
+    required: true,
   },
 
   passwordDigest: {
     type: String,
-    required: true
+    required: true,
   },
 
   // age: {
@@ -26,18 +26,28 @@ const participantSchema = new mongoose.Schema({
   //   required: true
   // },
 
-  currentCourses:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  currentCourses: [
+    {
+      course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+      hours: { type: Number, default: 0 },
+    },
+  ],
 
-  previousCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  previousCourses: [
+    {
+      course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+      hours: { type: Number, default: 0 },
+    },
+  ],
   Scheduel: [
     {
       type: mongoose.Schema.Types.ObjectId, ref:'Event'
     }
   ],
 
-  skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
+  skills: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 })
 
-const Participant = mongoose.model('Participant', participantSchema)
+const Participant = mongoose.model("Participant", participantSchema)
 
 module.exports = Participant

@@ -1,5 +1,6 @@
 const { Provider } = require("../models")
-const { statics } = require("../models/skill")
+
+
 
 const GetProviders = async (req, res) => {
   try {

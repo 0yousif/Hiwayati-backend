@@ -1,5 +1,8 @@
 const Course = require("../models/course")
 const Event = require("../models/Event")
+const Participant = require("../models/Participant")
+const Teacher = require("../models/Teacher")
+const { getUser } = require("../middleware/")
 
 exports.courses_create_post = async (req, res) => {
   return res.send(await Course.create(req.body))
@@ -33,13 +36,35 @@ exports.courses_delete_delete = async (req, res) => {
   } else return res.send("not found")
 }
 
+exports.courses_enroll_post = async (req, res) => {
+  if (await getUser(res.locals.payload.id)) {
+    const user = await getUser(res.locals.payload.id)
+    if (user.currentCourses) {
+      user.currentCourses.push({ course: req.params.courseId, hours: 0 })
+      await user.save()
+    } else {
+      console.log("here")
+      const courses = user.courses
+
+      courses.push({
+        course: req.params.courseId,
+        hours: 0,
+      })
+      user.save()
+      console.log(user.courses)
+    }
+  } else {
+    return res.send("Not found")
+  }
+}
+
 exports.messages_create_post = async (req, res) => {
   if (await Course.findById(req.params.id)) {
     await Course.findByIdAndUpdate(req.params.id, {
       $push: {
         messages: {
           userType: req.body.userType,
-          userId: "6895da05ba52465217424480", // this should be taken from the user session later on
+          userId: res.locals.payload.id, // this should be taken from the user session later on
           content: req.body.content,
         },
       },

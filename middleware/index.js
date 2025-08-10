@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const Participant = require("../models/Participant")
+const Teacher = require("../models/Teacher")
 require("dotenv").config()
 
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
@@ -7,7 +9,7 @@ const APP_SECRET = process.env.APP_SECRET
 
 const hashPassword = async (password) => {
   let hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
-  
+
   return hashedPassword
 }
 
@@ -18,10 +20,9 @@ const comparePassword = async (password, storedPassword) => {
 }
 
 const createToken = (payload) => {
-  
   let token = jwt.sign(payload, APP_SECRET)
 
-  return token 
+  return token
 }
 
 const stripToken = (req, res, next) => {
@@ -33,11 +34,10 @@ const stripToken = (req, res, next) => {
       return next()
     }
 
-    res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
-
+    res.status(401).send({ status: "Error", msg: "Unauthorized" })
   } catch (error) {
     console.log(error)
-    res.status(401).send({ status: 'Error', msg: 'Strip Token Error!' })
+    res.status(401).send({ status: "Error", msg: "Strip Token Error!" })
   }
 }
 
@@ -49,20 +49,31 @@ const verifyToken = (req, res, next) => {
 
     if (payload) {
       res.locals.payload = payload
-      
+
       return next()
     }
-    res.status(401).send({ status: 'Error', msg: "Unauthorized" })
+    res.status(401).send({ status: "Error", msg: "Unauthorized" })
   } catch (error) {
     console.log(error)
     res.status(401).send({ status: "Error", msg: "Verify Token Error!" })
   }
-} 
+}
+
+const getUser = async (id) => {
+  if (await Participant.findById(id)) {
+    return await Participant.findById(id)
+  } else if (await Teacher.findById(id)) {
+    return await Teacher.findById(id)
+  } else {
+    return null
+  }
+}
 
 module.exports = {
   hashPassword,
   comparePassword,
   createToken,
   stripToken,
-  verifyToken
+  verifyToken,
+  getUser,
 }

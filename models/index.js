@@ -9,7 +9,7 @@ const Skill = mongoose.model('Skill', skillSchema)
 const Provider = mongoose.model('Provider', providerSchema)
 
 module.exports = {
-
+  
   Skill,
   Provider,
 }
