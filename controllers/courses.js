@@ -89,7 +89,7 @@ exports.messages_readAll_get = async (req, res) => {
 
 exports.event_create_post= async (req,res)=>{
   const newEvent= await Event.create(req.body)
-  await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent.id }})
+  await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent._id }})
   res.send(newEvent)
 }
 exports.event_readOne_get=async (req,res)=>{
@@ -97,11 +97,11 @@ exports.event_readOne_get=async (req,res)=>{
   return res.send(event)
 }
 
-// exports.event_deleteOne_delete = async (req, res) => {
+exports.event_deleteOne_delete = async (req, res) => {
+    
+  await Course.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId }})
 
-//   await Course.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId }})
+  await Event.findByIdAndDelete(req.params.eventId)
 
-//   await Event.findByIdAndDelete(req.params.eventId)
-
-//   return res.send('delete')
-// }
+  return res.send('delete')
+}
