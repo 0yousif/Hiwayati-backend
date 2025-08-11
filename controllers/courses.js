@@ -10,13 +10,13 @@ exports.courses_create_post = async (req, res) => {
 }
 
 exports.courses_readAll_get = async (req, res) => {
-  const response = await Course.find({}).populate('teacher').populate('provider').populate('Skill').populate('Event')
+  const response = await Course.find({}).populate('teacher').populate('provider').populate('skills').populate('events')
   res.send(response)
 }
 
 exports.courses_readOne_get = async (req, res) => {
   if (await Course.findById(req.params.id)) {
-    return res.send(await Course.findById(req.params.id).populate('teacher').populate('provider').populate('Skill').populate('Event'))
+    return res.send(await Course.findById(req.params.id).populate('teacher').populate('provider').populate('skills').populate('events'))
   } else {
     return res.send("not found")
   }
