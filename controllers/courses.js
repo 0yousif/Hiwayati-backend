@@ -5,16 +5,18 @@ const Teacher = require("../models/Teacher")
 const { getUser } = require("../middleware/")
 
 exports.courses_create_post = async (req, res) => {
+  req.body.teacher = res.locals.payload.id
   return res.send(await Course.create(req.body))
 }
 
 exports.courses_readAll_get = async (req, res) => {
-  res.send(await Course.find({}))
+  const response = await Course.find({}).populate('teacher').populate('provider').populate('Skill').populate('Event')
+  res.send(response)
 }
 
 exports.courses_readOne_get = async (req, res) => {
   if (await Course.findById(req.params.id)) {
-    return res.send(await Course.findById(req.params.id))
+    return res.send(await Course.findById(req.params.id).populate('teacher').populate('provider').populate('Skill').populate('Event'))
   } else {
     return res.send("not found")
   }
@@ -89,7 +91,7 @@ exports.messages_readAll_get = async (req, res) => {
 
 exports.event_create_post= async (req,res)=>{
   const newEvent= await Event.create(req.body)
-  await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent._id }})
+  await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent._id }}).populate('events')
   res.send(newEvent)
 }
 exports.event_readOne_get=async (req,res)=>{
