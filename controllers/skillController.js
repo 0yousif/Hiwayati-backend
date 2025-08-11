@@ -1,5 +1,5 @@
 const { Skill } = require("../models")
-
+const Course = require("../models/course")
 
 
 const GetSkills = async (req, res) => {
@@ -23,6 +23,7 @@ const GetSkill = async (req,res) => {
 const CreateSkill = async (req, res) => {
   try {
     const skill = await Skill.create({ ...req.body })
+    await Course.findByIdAndUpdate(req.body.courses,{$push:{skills : skill._id }})
     res.status(200).send(skill)
   } catch (error) {
     throw error
