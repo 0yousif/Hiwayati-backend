@@ -62,8 +62,8 @@ const authRouter = require("./routes/auth")
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id)
 
-  socket.on("sendMessage", (messageContent,username) => {
-    io.emit("receiveMessage", messageContent, username)
+  socket.on("sendMessage", (messageContent,username,id) => {
+    io.emit("receiveMessage", messageContent, username,id)
   })
 
   socket.on("disconnect", () => {
