@@ -158,12 +158,37 @@ exports.CheckSession = async (req, res) => {
   res.status(200).send(payload)
 }
 
+// exports.auth_profile_get = async (req, res) => {
+//   try {
+//     let user = await Teacher.findById(req.params.id)
+
+//     if (!user) {
+//       user = await Participant.findById(req.params.id)
+//     }
+//     res.status(200).send(user)
+//   } catch (error) {
+//     throw error
+//   }
+// }
+
+
 exports.auth_profile_get = async (req, res) => {
   try {
-    let user = await Teacher.findById(req.params.id)
-
+    const prop = [
+      { path: 'skills', select: 'name description' },
+      { path: 'currentCourses.course', select: 'name price image' },
+      { path: 'previousCourses.course', select: 'name price image' },
+      {
+        path: 'Scheduel',
+        populate: [
+          { path: 'courses_id', select: 'name price image' },
+          { path: 'place_id', select: 'name location' }
+        ]
+      }
+    ]
+    let user = await Teacher.findById(req.params.id).populate(prop)
     if (!user) {
-      user = await Participant.findById(req.params.id)
+      user = await Participant.findById(req.params.id).populate(prop)
     }
     res.status(200).send(user)
   } catch (error) {
