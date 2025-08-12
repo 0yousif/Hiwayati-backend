@@ -5,16 +5,18 @@ const Teacher = require("../models/Teacher")
 const { getUser, getUserModel } = require("../middleware/")
 
 exports.courses_create_post = async (req, res) => {
+  req.body.teacher = res.locals.payload.id
   return res.send(await Course.create(req.body))
 }
 
 exports.courses_readAll_get = async (req, res) => {
-  res.send(await Course.find({}))
+  const response = await Course.find({}).populate([{path:'skills'},{path:'provider'},{path:'events'},{path:'teacher'}])
+  res.send(response)
 }
 
 exports.courses_readOne_get = async (req, res) => {
   if (await Course.findById(req.params.id)) {
-    return res.send(await Course.findById(req.params.id))
+    return res.send(await Course.findById(req.params.id).populate([{path:'skills'},{path:'provider'},{path:'events'},{path:'teacher'}]))
   } else {
     return res.send("not found")
   }
@@ -107,11 +109,11 @@ exports.event_readOne_get = async (req, res) => {
   return res.send(event)
 }
 
-// exports.event_deleteOne_delete = async (req, res) => {
+exports.event_deleteOne_delete = async (req, res) => {
+    
+  await Course.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId }})
 
-//   await Course.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId }})
+  await Event.findByIdAndDelete(req.params.eventId)
 
-//   await Event.findByIdAndDelete(req.params.eventId)
-
-//   return res.send('delete')
-// }
+  return res.send('delete')
+}

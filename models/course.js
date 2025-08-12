@@ -10,12 +10,12 @@ const courseSchema = new mongoose.Schema({
     required: true,
   },
   provider: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Provider",
     required: true,
   },
   teacher: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Teacher",
     required: true,
   },
@@ -25,7 +25,7 @@ const courseSchema = new mongoose.Schema({
   },
   skills: [
     {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Skill",
     },
   ],

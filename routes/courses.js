@@ -57,6 +57,6 @@ router.get(
 
 router.post('/:id/event/',courseCtrl.event_create_post)
 router.get('/:id/event/:eventId',courseCtrl.event_readOne_get)
-// router.delete('/:id/event/remove/:eventId',courseCtrl.event_deleteOne_delete)
+router.delete('/:id/event/remove/:eventId',courseCtrl.event_deleteOne_delete)
 
 module.exports = router
