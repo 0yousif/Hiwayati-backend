@@ -69,6 +69,14 @@ const getUser = async (id) => {
   }
 }
 
+const getUserModel = async (id) => {
+  if (await Participant.findById(id)) {
+    return "Participant"
+  } else if (await Teacher.findById(id)) {
+    return "Teacher"
+  } 
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
@@ -76,4 +84,5 @@ module.exports = {
   stripToken,
   verifyToken,
   getUser,
+  getUserModel
 }

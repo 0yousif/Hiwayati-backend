@@ -2,7 +2,7 @@ const Course = require("../models/course")
 const Event = require("../models/Event")
 const Participant = require("../models/Participant")
 const Teacher = require("../models/Teacher")
-const { getUser } = require("../middleware/")
+const { getUser, getUserModel } = require("../middleware/")
 
 exports.courses_create_post = async (req, res) => {
   return res.send(await Course.create(req.body))
@@ -40,6 +40,7 @@ exports.courses_enroll_post = async (req, res) => {
   if (await getUser(res.locals.payload.id)) {
     const user = await getUser(res.locals.payload.id)
     if (user.currentCourses) {
+      // which means the use is a Participant
       user.currentCourses.push({ course: req.params.courseId, hours: 0 })
       await user.save()
     } else {
@@ -63,36 +64,45 @@ exports.messages_create_post = async (req, res) => {
     await Course.findByIdAndUpdate(req.params.id, {
       $push: {
         messages: {
-          userType: req.body.userType,
-          userId: res.locals.payload.id, // this should be taken from the user session later on
+          userType: await getUserModel(res.locals.payload.id),
+          userId: res.locals.payload.id,
           content: req.body.content,
         },
       },
     })
-    res.send("comment created")
+    res.send(
+      "comment created" +
+        JSON.stringify({
+          userType: await getUserModel(res.locals.payload.id),
+          userId: res.locals.payload.id,
+          content: req.body.content,
+        })
+    )
   } else return res.send("not found")
 }
 
 exports.messages_readAll_get = async (req, res) => {
   if (await Course.findById(req.params.id)) {
-    const course = await Course.findById(req.params.id)
+    const course = await Course.findById(req.params.id).populate({
+      path: "messages",
+      populate: {
+        path: "userId",
+        model: this.userType,
+      },
+    })
+
     res.send(course.messages)
   } else return res.send("not found")
 }
 
-exports.messages_readAll_get = async (req, res) => {
-  if (await Course.findById(req.params.id)) {
-    const course = await Course.findById(req.params.id)
-    res.send(course.messages)
-  } else return res.send("not found")
-}
-
-exports.event_create_post= async (req,res)=>{
-  const newEvent= await Event.create(req.body)
-  await Course.findByIdAndUpdate(req.params.id,{$push:{events : newEvent.id }})
+exports.event_create_post = async (req, res) => {
+  const newEvent = await Event.create(req.body)
+  await Course.findByIdAndUpdate(req.params.id, {
+    $push: { events: newEvent.id },
+  })
   res.send(newEvent)
 }
-exports.event_readOne_get=async (req,res)=>{
+exports.event_readOne_get = async (req, res) => {
   const event = await Event.findById(req.params.eventId)
   return res.send(event)
 }
