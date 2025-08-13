@@ -3,20 +3,33 @@ const Event = require("../models/Event")
 const Participant = require("../models/Participant")
 const Teacher = require("../models/Teacher")
 const { getUser, getUserModel } = require("../middleware/")
-
+const mongoose = require("mongoose")
+const { join } = require("path")
 exports.courses_create_post = async (req, res) => {
   req.body.teacher = res.locals.payload.id
   return res.send(await Course.create(req.body))
 }
 
 exports.courses_readAll_get = async (req, res) => {
-  const response = await Course.find({}).populate([{path:'skills'},{path:'provider'},{path:'events'},{path:'teacher'}])
+  const response = await Course.find({}).populate([
+    { path: "skills" },
+    { path: "provider" },
+    { path: "events" },
+    { path: "teacher" },
+  ])
   res.send(response)
 }
 
 exports.courses_readOne_get = async (req, res) => {
   if (await Course.findById(req.params.id)) {
-    return res.send(await Course.findById(req.params.id).populate([{path:'skills'},{path:'provider'},{path:'events'},{path:'teacher'}]))
+    return res.send(
+      await Course.findById(req.params.id).populate([
+        { path: "skills" },
+        { path: "provider" },
+        { path: "events" },
+        { path: "teacher" },
+      ])
+    )
   } else {
     return res.send("not found")
   }
@@ -36,29 +49,6 @@ exports.courses_delete_delete = async (req, res) => {
     await Course.findByIdAndDelete(req.params.id)
     return res.send("Course Deleted")
   } else return res.send("not found")
-}
-
-exports.courses_enroll_post = async (req, res) => {
-  if (await getUser(res.locals.payload.id)) {
-    const user = await getUser(res.locals.payload.id)
-    if (user.currentCourses) {
-      // which means the use is a Participant
-      user.currentCourses.push({ course: req.params.courseId, hours: 0 })
-      await user.save()
-    } else {
-      console.log("here")
-      const courses = user.courses
-
-      courses.push({
-        course: req.params.courseId,
-        hours: 0,
-      })
-      user.save()
-      console.log(user.courses)
-    }
-  } else {
-    return res.send("Not found")
-  }
 }
 
 exports.messages_create_post = async (req, res) => {
@@ -110,10 +100,48 @@ exports.event_readOne_get = async (req, res) => {
 }
 
 exports.event_deleteOne_delete = async (req, res) => {
-    
-  await Course.findByIdAndUpdate(req.params.id,{$pull:{events : req.params.eventId }})
+  await Course.findByIdAndUpdate(req.params.id, {
+    $pull: { events: req.params.eventId },
+  })
 
   await Event.findByIdAndDelete(req.params.eventId)
 
-  return res.send('delete')
+  return res.send("delete")
+}
+
+exports.courses_end_post = async (req, res) => {
+  const course = await Course.findById(req.params.id)
+  if (course.teacher._id.toString() === res.locals.payload.id.toString()) {
+    const courseId = (await Course.findById(req.params.id))._id
+    console.log(courseId)
+    const joinedParticipants = await Participant.find({
+      "currentCourses.course": { $in: [courseId] },
+    })
+
+
+    res.send(joinedParticipants)
+
+    // await course.save()
+  }
+}
+
+exports.courses_enroll_post = async (req, res) => {
+  const user = await getUser(res.locals.payload.id)
+  if (user.currentCourses) {
+    if (user.currentCourses.includes(req.params.id)) {
+      return res.send("This user is already enrolled")
+    } else {
+      const courseId = (await Course.findById(req.params.id))._id
+      console.log(courseId)
+      await res.send(
+        await Participant.findByIdAndUpdate(res.locals.payload.id, {
+          $push: {
+            currentCourses: {course: courseId},
+          },
+        })
+      )
+    }
+  } else {
+    return res.send("This is a teacher account")
+  }
 }
