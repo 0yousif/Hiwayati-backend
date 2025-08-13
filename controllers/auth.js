@@ -158,7 +158,7 @@ exports.CheckSession = async (req, res) => {
 
 exports.auth_profile_get = async (req, res) => {
   try {
-    const prop = [
+    const participantProp = [
   { path: 'skills', select: 'name description' },
   { path: 'currentCourses.course', select: 'name price image skills', populate: { path: 'skills', select: 'name description' } },
   { path: 'previousCourses.course', select: 'name price image skills', populate: { path: 'skills', select: 'name description' } },
@@ -183,7 +183,7 @@ const teacherProp = [
     let user = await Teacher.findById(req.params.id).populate(teacherProp)
 
     if (!user) {
-      user = await Participant.findById(req.params.id).populate(prop)
+      user = await Participant.findById(req.params.id).populate(participantProp)
     }
     res.status(200).send(user)
   } catch (error) {
