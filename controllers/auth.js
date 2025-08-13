@@ -1,10 +1,8 @@
-const Participant = require("../models/Participant")
-const Teacher = require("../models/Teacher")
-const middleware = require("../middleware/index")
-
+const Participant = require('../models/Participant')
+const Teacher = require('../models/Teacher')
+const middleware = require('../middleware/index')
 
 exports.auth_signUp_post = async (req, res) => {
-
   let userType
 
   if (req.body.isTeacher) {
@@ -16,8 +14,8 @@ exports.auth_signUp_post = async (req, res) => {
   try {
     const { email, password, confirmPassword, username, bio } = req.body
 
-    if (password !== confirmPassword || password === "") {
-      return res.status(400).send("Password must match")
+    if (password !== confirmPassword || password === '') {
+      return res.status(400).send('Password must match')
     }
 
     let passwordDigest = await middleware.hashPassword(password)
@@ -26,14 +24,14 @@ exports.auth_signUp_post = async (req, res) => {
     if (existingUsername) {
       return res
         .status(400)
-        .send(" Username already taken! Please choose another one.")
+        .send(' Username already taken! Please choose another one.')
     }
 
     let existingEmail = await userType.findOne({ email })
     if (existingEmail) {
       return res
         .status(400)
-        .send("A user with that email has already been registered!")
+        .send('A user with that email has already been registered!')
     } else {
       const user = await userType.create(
         req.body.isTeacher
@@ -47,7 +45,7 @@ exports.auth_signUp_post = async (req, res) => {
     throw error
   }
 }
-  
+
 exports.auth_signIn_post = async (req, res) => {
   let userType
 
@@ -69,19 +67,19 @@ exports.auth_signIn_post = async (req, res) => {
       let payload = {
         username: user.username,
         email: user.email,
-        id: user._id,
+        id: user._id
       }
 
       let token = middleware.createToken(payload)
       return res.status(200).send({ user: payload, token })
     }
-    return res.status(401).send({ status: "Error", msg: "Unauthorized" })
+    return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
   } catch (error) {
     console.log(error)
     console.log(error)
     res
       .status(401)
-      .send({ status: "Error", msg: "An error has occurred logging in!" })
+      .send({ status: 'Error', msg: 'An error has occurred logging in!' })
   }
 }
 
@@ -103,30 +101,30 @@ exports.auth_update_put = async (req, res) => {
       if (matched) {
         let passwordDigest = await middleware.hashPassword(newPassword)
         user = await userType.findByIdAndUpdate(req.params.id, {
-          passwordDigest,
+          passwordDigest
         })
         let payload = {
           id: user._id,
-          email: user.email,
+          email: user.email
         }
 
         return res
           .status(200)
-          .send({ status: "Password Updated!", user: payload })
+          .send({ status: 'Password Updated!', user: payload })
       } else {
         return res
           .status(400)
-          .send({ status: "Error", msg: "Old Password did not match!" })
+          .send({ status: 'Error', msg: 'Old Password did not match!' })
       }
     }
     res
       .status(401)
-      .send({ status: "Error", msg: "You can't edit this profile" })
+      .send({ status: 'Error', msg: "You can't edit this profile" })
   } catch (error) {
     console.log(error)
     res.status(401).send({
-      status: "Error",
-      msg: "An error has occurred updating password!",
+      status: 'Error',
+      msg: 'An error has occurred updating password!'
     })
   }
 }
@@ -142,13 +140,13 @@ exports.auth_delete_delete = async (req, res) => {
     if (res.locals.payload.id === isUser.id) {
       await userType.findByIdAndDelete(req.params.id)
 
-      return res.status(200).send({ status: "User Delete!" })
+      return res.status(200).send({ status: 'User Delete!' })
     }
-    res.status(401).send({ status: "Error", msg: "You can't delete thi user" })
+    res.status(401).send({ status: 'Error', msg: "You can't delete thi user" })
   } catch (error) {
     res.status(401).send({
-      status: "Error",
-      msg: "An error has occurred while deleting user",
+      status: 'Error',
+      msg: 'An error has occurred while deleting user'
     })
   }
 }
@@ -174,21 +172,32 @@ exports.CheckSession = async (req, res) => {
 
 exports.auth_profile_get = async (req, res) => {
   try {
-    const prop = [
-      { path: 'skills', select: 'name description' },
-      { path: 'currentCourses.course', select: 'name price image skills' },
-      { path: 'previousCourses.course', select: 'name price image skills' },
-      {
-        path: 'Scheduel',
-        populate: [
-          { path: 'courses_id', select: 'name price image' },
-          { path: 'place_id', select: 'name location' }
-        ]
-      }
-    ]
-    let user = await Teacher.findById(req.params.id).populate(prop)
+    const participantProp = [
+  { path: 'skills', select: 'name description' },
+  { path: 'currentCourses.course', select: 'name price image skills', populate: { path: 'skills', select: 'name description' } },
+  { path: 'previousCourses.course', select: 'name price image skills', populate: { path: 'skills', select: 'name description' } },
+  { path: 'Scheduel', populate: [ { path: 'courses_id', select: 'name price image' }, { path: 'place_id', select: 'name location' } ] }
+]
+
+const teacherProp = [
+  { 
+    path: 'courses', 
+    select: 'name price image skills', 
+    populate: { path: 'skills', select: 'name description' } 
+  },
+  { 
+    path: 'Scheduel', 
+    populate: [
+      { path: 'courses_id', select: 'name price image' }, 
+      { path: 'place_id', select: 'name location' }
+    ] 
+  }
+]
+
+    let user = await Teacher.findById(req.params.id).populate(teacherProp)
+
     if (!user) {
-      user = await Participant.findById(req.params.id).populate(prop)
+      user = await Participant.findById(req.params.id).populate(participantProp)
     }
     res.status(200).send(user)
   } catch (error) {
