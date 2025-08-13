@@ -5,6 +5,7 @@ const Teacher = require("../models/Teacher")
 const { getUser, getUserModel } = require("../middleware/")
 const mongoose = require("mongoose")
 const { join } = require("path")
+const { endianness } = require("os")
 exports.courses_create_post = async (req, res) => {
   const user = await getUser(res.locals.payload.id)
   if (!user.currentCourses) {
@@ -126,10 +127,29 @@ exports.courses_end_post = async (req, res) => {
       "currentCourses.course": { $in: [courseId] },
     })
 
-    
+    joinedParticipants.forEach((joinedParticipant) => {
+      let endedCourseIndex
+      let endedCourse = joinedParticipant.currentCourses.find(
+        (currentCourse, index) => {
+          if (currentCourse.course.toString() === courseId.toString()) {
+            console.log(currentCourse.course.toString(), courseId.toString())
+            endedCourseIndex = index
+            return true
+          }
+        }
+      )
 
+      joinedParticipant.currentCourses.splice(endedCourseIndex, 1)
+      joinedParticipant.previousCourses.push({
+        course: endedCourse.course,
+        hours: endedCourse.course,
+      })
+      joinedParticipant.save()
+    })
+
+    course.state = "done"
     await course.save()
-    return res.send(course)
+    return res.send({ course, joinedParticipants })
   } else {
     return res.status(400).send("You are not the course owner")
   }
