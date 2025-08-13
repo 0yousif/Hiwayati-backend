@@ -128,18 +128,18 @@ exports.courses_end_post = async (req, res) => {
 exports.courses_enroll_post = async (req, res) => {
   const user = await getUser(res.locals.payload.id)
   if (user.currentCourses) {
-    if (user.currentCourses.includes(req.params.id)) {
+    const courseId = (await Course.findById(req.params.id))._id
+    if (user.currentCourses.some(currentCourse => currentCourse.course.toString() === courseId._id.toString())) {
       return res.send("This user is already enrolled")
     } else {
-      const courseId = (await Course.findById(req.params.id))._id
-      console.log(courseId)
-      await res.send(
-        await Participant.findByIdAndUpdate(res.locals.payload.id, {
-          $push: {
-            currentCourses: {course: courseId},
-          },
-        })
-      )
+      // await res.send(
+      //   await Participant.findByIdAndUpdate(res.locals.payload.id, {
+      //     $push: {
+      //       currentCourses: {course: courseId},
+      //     },
+      //   })
+      // )
+      res.send()
     }
   } else {
     return res.send("This is a teacher account")
