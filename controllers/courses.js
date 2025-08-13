@@ -111,37 +111,43 @@ exports.event_deleteOne_delete = async (req, res) => {
 
 exports.courses_end_post = async (req, res) => {
   const course = await Course.findById(req.params.id)
+
   if (course.teacher._id.toString() === res.locals.payload.id.toString()) {
     const courseId = (await Course.findById(req.params.id))._id
     console.log(courseId)
     const joinedParticipants = await Participant.find({
       "currentCourses.course": { $in: [courseId] },
     })
-
-
-    res.send(joinedParticipants)
-
+    
+    return res.send(joinedParticipants)
     // await course.save()
+  }else {
+    return res.status(400).send("You are not the course owner")
   }
 }
 
 exports.courses_enroll_post = async (req, res) => {
   const user = await getUser(res.locals.payload.id)
   if (user.currentCourses) {
-    const courseId = (await Course.findById(req.params.id))._id
-    if (user.currentCourses.some(currentCourse => currentCourse.course.toString() === courseId._id.toString())) {
-      return res.send("This user is already enrolled")
+    const course = await Course.findById(req.params.id)
+    if (
+      user.currentCourses.some(
+        (currentCourse) =>
+          currentCourse.course.toString() === course._id.toString()
+      )
+    ) {
+      return res.status(400).send("This user is already enrolled")
     } else {
-      // await res.send(
-      //   await Participant.findByIdAndUpdate(res.locals.payload.id, {
-      //     $push: {
-      //       currentCourses: {course: courseId},
-      //     },
-      //   })
-      // )
-      res.send()
+      return await res.send(
+        await Participant.findByIdAndUpdate(res.locals.payload.id, {
+          $push: {
+            currentCourses: { course: course._id },
+            skills: course.skills,
+          },
+        })
+      )
     }
   } else {
-    return res.send("This is a teacher account")
+    return res.status(400).send("This is a teacher account")
   }
 }
