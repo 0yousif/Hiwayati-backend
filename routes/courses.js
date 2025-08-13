@@ -14,12 +14,7 @@ router.get(
   middleware.verifyToken,
   courseCtrl.courses_readAll_get
 )
-router.post(
-  "/enroll/:courseId",
-  middleware.stripToken,
-  middleware.verifyToken,
-  courseCtrl.courses_enroll_post
-)
+
 router.get(
   "/:id",
   middleware.stripToken,
@@ -37,6 +32,19 @@ router.delete(
   middleware.stripToken,
   middleware.verifyToken,
   courseCtrl.courses_delete_delete
+)
+
+router.post(
+  "/:id/end",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.courses_end_post
+)
+router.post(
+  "/:id/enroll",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.courses_enroll_post
 )
 
 // Comments

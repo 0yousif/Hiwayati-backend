@@ -16,16 +16,6 @@ const participantSchema = new mongoose.Schema({
     required: true,
   },
 
-  // age: {
-  //   type: Number,
-  //   required: true
-  // },
-
-  // image: {
-  //   type: String,
-  //   required: true
-  // },
-
   currentCourses: [
     {
       course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },

@@ -36,7 +36,7 @@ const courseSchema = new mongoose.Schema({
   messages: [
     {
       userId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         refPath: "messages.userType",
       },
@@ -52,6 +52,11 @@ const courseSchema = new mongoose.Schema({
     },
   ],
   events: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
+  state: {
+    type: String,
+    default: "running",
+    enum: ["running", "done"],
+  },
 })
 
 const Course = mongoose.model("Course", courseSchema)
