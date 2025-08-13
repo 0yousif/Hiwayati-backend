@@ -176,8 +176,8 @@ exports.auth_profile_get = async (req, res) => {
   try {
     const prop = [
       { path: 'skills', select: 'name description' },
-      { path: 'currentCourses.course', select: 'name price image' },
-      { path: 'previousCourses.course', select: 'name price image' },
+      { path: 'currentCourses.course', populate:'events' },
+      { path: 'previousCourses.course', select: 'name price image skills events' },
       {
         path: 'Scheduel',
         populate: [
