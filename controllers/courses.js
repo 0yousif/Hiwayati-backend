@@ -5,6 +5,7 @@ const Teacher = require("../models/Teacher")
 const { getUser, getUserModel } = require("../middleware/")
 const mongoose = require("mongoose")
 const { join } = require("path")
+const { param } = require("../routes/courses")
 exports.courses_create_post = async (req, res) => {
   req.body.teacher = res.locals.payload.id
   return res.send(await Course.create(req.body))
@@ -88,6 +89,7 @@ exports.messages_readAll_get = async (req, res) => {
 }
 
 exports.event_create_post = async (req, res) => {
+  req.body.courses_id = (await Course.findById(req.params.id))._id
   const newEvent = await Event.create(req.body)
   await Course.findByIdAndUpdate(req.params.id, {
     $push: { events: newEvent.id },
@@ -110,19 +112,49 @@ exports.event_deleteOne_delete = async (req, res) => {
 }
 
 exports.courses_end_post = async (req, res) => {
-  const course = await Course.findById(req.params.id)
+  try {
+    const course = await Course.findById(req.params.id)
 
-  if (course.teacher._id.toString() === res.locals.payload.id.toString()) {
-    const courseId = (await Course.findById(req.params.id))._id
-    console.log(courseId)
-    const joinedParticipants = await Participant.find({
-      "currentCourses.course": { $in: [courseId] },
-    })
-    
-    return res.send(joinedParticipants)
-    // await course.save()
-  }else {
-    return res.status(400).send("You are not the course owner")
+    if (course.teacher._id.toString() === res.locals.payload.id.toString()) {
+      const courseId = (await Course.findById(req.params.id))._id
+
+      let joinedParticipants = await Participant.find({
+        "currentCourses.course": { $in: [courseId] },
+      })
+
+      // saving the course object somewhere
+      joinedParticipants = joinedParticipants.map(async (joinedParticipant) => {
+        let courseObjectIndex
+        console.log(
+          "previous: joinedParticipant.currentCourses",
+          joinedParticipant.currentCourses
+        )
+        const courseObject = joinedParticipant.currentCourses.find(
+          (currentCourse, index) => {
+            if (currentCourse.course.toString() === courseId.toString()) {
+              courseObjectIndex = index
+              return true
+            }
+            return false
+          }
+        )
+
+        joinedParticipant.currentCourses.splice(courseObjectIndex, 1)
+        joinedParticipant.previousCourses.push({
+          course: courseObject.course,
+          hours: courseObject.hours,
+        })
+        await joinedParticipant.save()
+      })
+
+      course.state = "done"
+      await course.save()
+      return res.send("course is ended successfully")
+    } else {
+      return res.status(400).send("You are not the course owner")
+    }
+  } catch (error) {
+    throw error
   }
 }
 
