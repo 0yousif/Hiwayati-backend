@@ -7,12 +7,11 @@ const courseSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
+    // required: true,
   },
   provider: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Provider",
-    required: true,
   },
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
@@ -29,10 +28,6 @@ const courseSchema = new mongoose.Schema({
       ref: "Skill",
     },
   ],
-  price: {
-    type: Number,
-    required: true,
-  },
   messages: [
     {
       userId: {

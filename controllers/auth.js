@@ -75,8 +75,6 @@ exports.auth_signIn_post = async (req, res) => {
     }
     return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
   } catch (error) {
-    console.log(error)
-    console.log(error)
     res
       .status(401)
       .send({ status: 'Error', msg: 'An error has occurred logging in!' })
@@ -121,7 +119,6 @@ exports.auth_update_put = async (req, res) => {
       .status(401)
       .send({ status: 'Error', msg: "You can't edit this profile" })
   } catch (error) {
-    console.log(error)
     res.status(401).send({
       status: 'Error',
       msg: 'An error has occurred updating password!'
@@ -169,36 +166,55 @@ exports.CheckSession = async (req, res) => {
 //   }
 // }
 
-
 exports.auth_profile_get = async (req, res) => {
   try {
     const participantProp = [
-  { path: 'skills', select: 'name description' },
-  { path: 'currentCourses.course', select: 'name price image skills', populate: { path: 'skills', select: 'name description' } },
-  { path: 'previousCourses.course', select: 'name price image skills', populate: { path: 'skills', select: 'name description' } },
-  { path: 'Scheduel', populate: [ { path: 'courses_id', select: 'name price image' }, { path: 'place_id', select: 'name location' } ] }
-]
+      { path: "skills", select: "name description" },
+      {path: "currentCourses.course",select: "name price image skills events",
+        populate: [
+          { path: "skills", select: "name description" },
+          { path: "events" },
+        ],
+      },
+      {path: "previousCourses.course",select: "name price image skills events",
+        populate: [
+          { path: "skills", select: "name description" },
+          { path: "events" },
+        ],
+      },
+      {
+        path: "Scheduel",
+        populate: [
+          { path: "courses_id", select: "name price image" },
+          { path: "place_id", select: "name location" },
+        ],
+      },
+    ]
 
-const teacherProp = [
-  { 
-    path: 'courses', 
-    select: 'name price image skills', 
-    populate: { path: 'skills', select: 'name description' } 
-  },
-  { 
-    path: 'Scheduel', 
-    populate: [
-      { path: 'courses_id', select: 'name price image' }, 
-      { path: 'place_id', select: 'name location' }
-    ] 
-  }
-]
+    const teacherProp = [
+      {
+        path: "courses",
+        select: "name price image skills events",
+        populate: [
+          { path: "skills", select: "name description" },
+          { path: "events" },
+        ],
+      },
+      {
+        path: "Scheduel",
+        populate: [
+          { path: "courses_id", select: "name price image" },
+          { path: "place_id", select: "name location" },
+        ],
+      },
+    ]
 
     let user = await Teacher.findById(req.params.id).populate(teacherProp)
 
     if (!user) {
       user = await Participant.findById(req.params.id).populate(participantProp)
     }
+
     res.status(200).send(user)
   } catch (error) {
     throw error
