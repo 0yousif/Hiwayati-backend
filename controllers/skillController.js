@@ -1,7 +1,6 @@
 const { Skill } = require("../models")
 const Course = require("../models/course")
 
-
 const GetSkills = async (req, res) => {
   try {
     const skills = await Skill.find({})
@@ -11,7 +10,7 @@ const GetSkills = async (req, res) => {
   }
 }
 
-const GetSkill = async (req,res) => {
+const GetSkill = async (req, res) => {
   try {
     const skill = await Skill.findById(req.params.skill_id)
     res.status(200).send(skill)
@@ -23,7 +22,6 @@ const GetSkill = async (req,res) => {
 const CreateSkill = async (req, res) => {
   try {
     const skill = await Skill.create({ ...req.body })
-    await Course.findByIdAndUpdate(req.body.courses,{$push:{skills : skill._id }})
     res.status(200).send(skill)
   } catch (error) {
     throw error
@@ -41,13 +39,18 @@ const UpdateSkill = async (req, res) => {
   }
 }
 
-const DeleteSkill = async (req,res) => {
+const DeleteSkill = async (req, res) => {
   try {
-    const skill = await Skill.deleteOne({_id: req.params.skill_id})
-    res.status(200).send({msg:"Skill Deleted", payload: req.params.skill_id, status:'ok'})
+    const skill = await Skill.deleteOne({ _id: req.params.skill_id })
+    res
+      .status(200)
+      .send({
+        msg: "Skill Deleted",
+        payload: req.params.skill_id,
+        status: "ok",
+      })
   } catch (error) {
     throw error
-    
   }
 }
 
@@ -56,5 +59,5 @@ module.exports = {
   GetSkill,
   CreateSkill,
   UpdateSkill,
-  DeleteSkill
+  DeleteSkill,
 }
