@@ -31,9 +31,11 @@ const participantSchema = new mongoose.Schema({
   ],
   Scheduel: [
     {
-      type: mongoose.Schema.Types.ObjectId, ref:'Event'
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+    },
   ],
+  image: { type: String, required: true },
 
   skills: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 })

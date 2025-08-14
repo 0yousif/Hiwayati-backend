@@ -5,6 +5,7 @@ const eventSchema = new mongoose.Schema({
       description: { type: String, required: true },
       date: { type: String, required: true },
       time: { type: String, required: true },
+      duration: {type:Number,required:true},
       courses_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
       place_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }
     })

@@ -4,7 +4,7 @@ const middleware = require('../middleware/index')
 
 exports.auth_signUp_post = async (req, res) => {
   let userType
-
+  console.log(req.body)
   if (req.body.isTeacher) {
     userType = Teacher
   } else {
@@ -12,7 +12,7 @@ exports.auth_signUp_post = async (req, res) => {
   }
 
   try {
-    const { email, password, confirmPassword, username, bio } = req.body
+    const { email, password, confirmPassword, username, bio, image } = req.body
 
     if (password !== confirmPassword || password === '') {
       return res.status(400).send('Password must match')
@@ -35,8 +35,8 @@ exports.auth_signUp_post = async (req, res) => {
     } else {
       const user = await userType.create(
         req.body.isTeacher
-          ? { username, email, passwordDigest, bio }
-          : { username, email, passwordDigest }
+          ? { username, email, passwordDigest, bio,image }
+          : { username, email, passwordDigest, image }
       )
 
       res.status(200).send(user)

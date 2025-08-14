@@ -142,7 +142,7 @@ exports.courses_end_post = async (req, res) => {
       joinedParticipant.currentCourses.splice(endedCourseIndex, 1)
       joinedParticipant.previousCourses.push({
         course: endedCourse.course,
-        hours: endedCourse.course,
+        hours: endedCourse.hours,
       })
       joinedParticipant.save()
     })
