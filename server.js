@@ -9,6 +9,12 @@ const app = express()
 const server = createServer(app)
 const Server = require("socket.io").Server
 const STATIC_CHANNELS = ["global_notifications", "global_chat"]
+const corsOption = {
+  origin: ["https://hiwayati-backend.onrender.com:3000/"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}
+
 // import { createServer } from "http"
 // import { Server } from "socket.io"
 
@@ -29,7 +35,11 @@ const morgan = require("morgan")
 // Require passUserToView & isSignedIn middlewares
 
 // use MiddleWares
-app.use(cors())
+app.use("/course", (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  next()
+})
+app.use(cors(corsOption))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan("dev"))
@@ -60,25 +70,15 @@ const authRouter = require("./routes/auth")
 
 // socket connection
 io.on("connection", (socket) => {
-
-  socket.on("sendMessage", (messageContent,username,id) => {
-    io.emit("receiveMessage", messageContent, username,id)
+  socket.on("sendMessage", (messageContent, username, id) => {
+    io.emit("receiveMessage", messageContent, username, id)
   })
 
-  socket.on("disconnect", () => {
-  })
+  socket.on("disconnect", () => {})
 })
 // use Routers
 app.use("/skill", skillRouter)
 app.use("/provider", providerRouter)
-app.use(
-  "/course",
-  (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*")
-    next()
-  },
-  coursesRouter
-)
 app.use("/auth", authRouter)
 
 // Listener
