@@ -8,16 +8,6 @@ const createServer = require("http").createServer
 const app = express()
 const server = createServer(app)
 const Server = require("socket.io").Server
-// const corsOption = {
-//   origin: [
-//     "https://hiwayati-7efbc0ac9205.herokuapp.com",
-//     "https://hiwayati2.surge.sh",
-//     "https://hiwayati-7efbc0ac9205.herokuapp.com:5000",
-//     "https://hiwayati2.surge.sh:5000",
-//   ],
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-// }
 
 // import { createServer } from "http"
 // import { Server } from "socket.io"
@@ -40,7 +30,7 @@ const morgan = require("morgan")
 
 // use MiddleWares
 app.use(cors())
-app.use("/course", (req, res, next) => {
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "*")
   res.header("Access-Control-Allow-Methods", "*")
@@ -51,29 +41,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan("dev"))
 app.use(express.static(path.join(__dirname, "public")))
 
-/*
-  Good morning everyone! 
-  I've been having the issue that my deployed front-end requests aren't reaching my heruku server, and when they do the server don't respond.
-  If you are having the same issue or having CORS error try adding those middlewares to your server file in the same order.
-  
-  app.use(cors())
-  app.use("/course", (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  )
-  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-  next()
-
-  Heyy 
-  I just figured out the issue, it is propbly the same for everyone cause yesterday me, hussain, mohammed, ali and manaf were having the same issue.
-
-  for surge and heruku just follow the same tutorial
-  })
-
-
-*/
 // Session Configurations
 app.use(
   session({
