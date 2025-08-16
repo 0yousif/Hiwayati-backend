@@ -10,7 +10,12 @@ const server = createServer(app)
 const Server = require("socket.io").Server
 const STATIC_CHANNELS = ["global_notifications", "global_chat"]
 const corsOption = {
-  origin: ["https://hiwayati-backend.onrender.com:3000/"],
+  origin: [
+    "https://hiwayati-7efbc0ac9205.herokuapp.com",
+    "https://hiwayati2.surge.sh",
+    "https://hiwayati-7efbc0ac9205.herokuapp.com:5000",
+    "https://hiwayati2.surge.sh:5000",
+  ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
 }
