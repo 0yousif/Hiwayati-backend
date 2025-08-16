@@ -8,17 +8,16 @@ const createServer = require("http").createServer
 const app = express()
 const server = createServer(app)
 const Server = require("socket.io").Server
-const STATIC_CHANNELS = ["global_notifications", "global_chat"]
-const corsOption = {
-  origin: [
-    "https://hiwayati-7efbc0ac9205.herokuapp.com",
-    "https://hiwayati2.surge.sh",
-    "https://hiwayati-7efbc0ac9205.herokuapp.com:5000",
-    "https://hiwayati2.surge.sh:5000",
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-}
+// const corsOption = {
+//   origin: [
+//     "https://hiwayati-7efbc0ac9205.herokuapp.com",
+//     "https://hiwayati2.surge.sh",
+//     "https://hiwayati-7efbc0ac9205.herokuapp.com:5000",
+//     "https://hiwayati2.surge.sh:5000",
+//   ],
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+// }
 
 // import { createServer } from "http"
 // import { Server } from "socket.io"
@@ -40,11 +39,16 @@ const morgan = require("morgan")
 // Require passUserToView & isSignedIn middlewares
 
 // use MiddleWares
+app.use(cors())
 app.use("/course", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  )
+  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
   next()
 })
-app.use(cors(corsOption))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan("dev"))
