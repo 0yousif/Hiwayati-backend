@@ -76,6 +76,7 @@ io.on("connection", (socket) => {
 app.use("/skill", skillRouter)
 app.use("/provider", providerRouter)
 app.use("/auth", authRouter)
+app.use("/course", coursesRouter)
 
 // Listener
 app.listen(port, () => {
