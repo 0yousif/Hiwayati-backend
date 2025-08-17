@@ -8,7 +8,7 @@ const createServer = require("http").createServer
 const app = express()
 const server = createServer(app)
 const Server = require("socket.io").Server
-const STATIC_CHANNELS = ["global_notifications", "global_chat"]
+
 // import { createServer } from "http"
 // import { Server } from "socket.io"
 
@@ -30,6 +30,12 @@ const morgan = require("morgan")
 
 // use MiddleWares
 app.use(cors())
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "*")
+  res.header("Access-Control-Allow-Methods", "*")
+  next()
+})
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan("dev"))
@@ -60,27 +66,15 @@ const authRouter = require("./routes/auth")
 
 // socket connection
 io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id)
-
-  socket.on("sendMessage", (messageContent,username,id) => {
-    io.emit("receiveMessage", messageContent, username,id)
+  socket.on("sendMessage", (messageContent, username, id) => {
+    io.emit("receiveMessage", messageContent, username, id)
   })
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id)
-  })
+  socket.on("disconnect", () => {})
 })
 // use Routers
 app.use("/skill", skillRouter)
 app.use("/provider", providerRouter)
-app.use(
-  "/course",
-  (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*")
-    next()
-  },
-  coursesRouter
-)
 app.use("/auth", authRouter)
 
 // Listener
