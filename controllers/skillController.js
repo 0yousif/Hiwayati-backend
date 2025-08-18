@@ -1,7 +1,7 @@
 const { Skill } = require("../models")
 const Course = require("../models/course")
 
-const GetSkills = async (req, res) => {
+const skill_readAll_get = async (req, res) => {
   try {
     const skills = await Skill.find({})
     res.status(200).send(skills)
@@ -10,7 +10,7 @@ const GetSkills = async (req, res) => {
   }
 }
 
-const GetSkill = async (req, res) => {
+const skill_readOne_get = async (req, res) => {
   try {
     const skill = await Skill.findById(req.params.skill_id)
     res.status(200).send(skill)
@@ -19,7 +19,7 @@ const GetSkill = async (req, res) => {
   }
 }
 
-const CreateSkill = async (req, res) => {
+const skill_create_post = async (req, res) => {
   try {
     const skill = await Skill.create({ ...req.body })
     res.status(200).send(skill)
@@ -28,7 +28,7 @@ const CreateSkill = async (req, res) => {
   }
 }
 
-const UpdateSkill = async (req, res) => {
+const skill_update_put = async (req, res) => {
   try {
     const skill = await Skill.findByIdAndUpdate(req.params.skill_id, req.body, {
       new: true,
@@ -39,7 +39,7 @@ const UpdateSkill = async (req, res) => {
   }
 }
 
-const DeleteSkill = async (req, res) => {
+const skill_delete_delete = async (req, res) => {
   try {
     const skill = await Skill.deleteOne({ _id: req.params.skill_id })
     res.status(200).send({
@@ -53,9 +53,9 @@ const DeleteSkill = async (req, res) => {
 }
 
 module.exports = {
-  GetSkills,
-  GetSkill,
-  CreateSkill,
-  UpdateSkill,
-  DeleteSkill,
+  skill_readOne_get,
+  skill_readAll_get,
+  skill_create_post,
+  skill_update_put,
+  skill_delete_delete,
 }

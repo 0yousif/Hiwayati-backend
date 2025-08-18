@@ -54,7 +54,7 @@ router.post(
 // Comments
 
 router.post(
-  "/:id/messages",
+  "/:id/message",
   middleware.stripToken,
   middleware.verifyToken,
   courseCtrl.messages_create_post
