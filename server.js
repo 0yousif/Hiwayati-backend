@@ -9,14 +9,9 @@ const app = express()
 const server = createServer(app)
 const Server = require("socket.io").Server
 
-// import { createServer } from "http"
-// import { Server } from "socket.io"
-
 const io = new Server(server)
-
-// Initialize app
-//fix error when post :ValidationError
 app.use(express.json())
+
 // Database Configuration
 const mongoose = require("./config/db")
 
@@ -26,7 +21,6 @@ const port = process.env.PORT ? process.env.PORT : 3000
 // Require MiddleWares
 const morgan = require("morgan")
 
-// Require passUserToView & isSignedIn middlewares
 
 // use MiddleWares
 app.use(cors())
