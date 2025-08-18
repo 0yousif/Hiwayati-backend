@@ -72,7 +72,7 @@ const getUserModel = async (id) => {
     return "Participant"
   } else if (await Teacher.findById(id)) {
     return "Teacher"
-  } 
+  }
 }
 
 module.exports = {
@@ -82,5 +82,5 @@ module.exports = {
   stripToken,
   verifyToken,
   getUser,
-  getUserModel
+  getUserModel,
 }

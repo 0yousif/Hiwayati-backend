@@ -42,13 +42,11 @@ const UpdateSkill = async (req, res) => {
 const DeleteSkill = async (req, res) => {
   try {
     const skill = await Skill.deleteOne({ _id: req.params.skill_id })
-    res
-      .status(200)
-      .send({
-        msg: "Skill Deleted",
-        payload: req.params.skill_id,
-        status: "ok",
-      })
+    res.status(200).send({
+      msg: "Skill Deleted",
+      payload: req.params.skill_id,
+      status: "ok",
+    })
   } catch (error) {
     throw error
   }

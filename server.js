@@ -21,7 +21,6 @@ const port = process.env.PORT ? process.env.PORT : 3000
 // Require MiddleWares
 const morgan = require("morgan")
 
-
 // use MiddleWares
 app.use(cors())
 app.use((req, res, next) => {
