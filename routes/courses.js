@@ -8,7 +8,8 @@ router.post(
   middleware.verifyToken,
   courseCtrl.courses_create_post
 )
-router.get( 
+
+router.get(
   "/",
   middleware.stripToken,
   middleware.verifyToken,
@@ -21,12 +22,14 @@ router.get(
   middleware.verifyToken,
   courseCtrl.courses_readOne_get
 )
+
 router.put(
   "/:id/edit",
   middleware.stripToken,
   middleware.verifyToken,
   courseCtrl.courses_edit_put
 )
+
 router.delete(
   "/:id",
   middleware.stripToken,
@@ -40,6 +43,7 @@ router.post(
   middleware.verifyToken,
   courseCtrl.courses_end_post
 )
+
 router.post(
   "/:id/enroll",
   middleware.stripToken,
@@ -55,16 +59,35 @@ router.post(
   middleware.verifyToken,
   courseCtrl.messages_create_post
 )
+
 router.get(
   "/:id/messages",
   middleware.stripToken,
   middleware.verifyToken,
   courseCtrl.messages_readAll_get
 )
+
 // router.delete("/:id/messages/:messageId", courseCtrl.messages_delete_delete)
 
-router.post('/:id/event/',courseCtrl.event_create_post)
-router.get('/:id/event/:eventId',courseCtrl.event_readOne_get)
-router.delete('/:id/event/remove/:eventId',courseCtrl.event_deleteOne_delete)
+router.post(
+  "/:id/event/",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.event_create_post
+)
+
+router.get(
+  "/:id/event/:eventId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.event_readOne_get
+)
+
+router.delete(
+  "/:id/event/remove/:eventId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.event_deleteOne_delete
+)
 
 module.exports = router
