@@ -4,7 +4,6 @@ const middleware = require('../middleware/index')
 
 exports.auth_signUp_post = async (req, res) => {
   let userType
-  console.log(req.body)
   if (req.body.isTeacher) {
     userType = Teacher
   } else {

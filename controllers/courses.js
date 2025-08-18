@@ -132,7 +132,6 @@ exports.courses_end_post = async (req, res) => {
       let endedCourse = joinedParticipant.currentCourses.find(
         (currentCourse, index) => {
           if (currentCourse.course.toString() === courseId.toString()) {
-            console.log(currentCourse.course.toString(), courseId.toString())
             endedCourseIndex = index
             return true
           }
