@@ -54,7 +54,7 @@ router.post(
 // Comments
 
 router.post(
-  "/:id/messages",
+  "/:id/message",
   middleware.stripToken,
   middleware.verifyToken,
   courseCtrl.messages_create_post
@@ -67,7 +67,19 @@ router.get(
   courseCtrl.messages_readAll_get
 )
 
-// router.delete("/:id/messages/:messageId", courseCtrl.messages_delete_delete)
+router.delete(
+  "/:id/message/:messageId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.message_delete_delete,
+)
+
+router.put(
+  "/:id/message/:messageId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  courseCtrl.message_update_put,
+)
 
 router.post(
   "/:id/event/",

@@ -6,35 +6,35 @@ router.get(
   "/",
   middleware.stripToken,
   middleware.verifyToken,
-  controller.GetSkills
+  controller.skill_readAll_get
 )
 
 router.get(
   "/:skill_id",
   middleware.stripToken,
   middleware.verifyToken,
-  controller.GetSkill
+  controller.skill_readOne_get
 )
 
 router.post(
   "/",
   middleware.stripToken,
   middleware.verifyToken,
-  controller.CreateSkill
+  controller.skill_create_post
 )
 
 router.put(
   "/:skill_id/edit",
   middleware.stripToken,
   middleware.verifyToken,
-  controller.UpdateSkill
+  controller.skill_update_put
 )
 
 router.delete(
   "/:skill_id",
   middleware.stripToken,
   middleware.verifyToken,
-  controller.DeleteSkill
+  controller.skill_delete_delete
 )
 
 module.exports = router
