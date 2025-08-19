@@ -116,7 +116,6 @@ exports.message_update_put = async (req, res) => {
   )
 
   if (message.userId.toString() === res.locals.payload.id.toString()) {
-    console.log(req.body)
     res.send(
       await Course.updateOne(
         {
