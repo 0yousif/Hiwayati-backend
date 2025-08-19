@@ -96,6 +96,24 @@ exports.messages_readAll_get = async (req, res) => {
   } else return res.send("not found")
 }
 
+exports.message_delete_delete = async (req, res) => {
+  const course = await Course.findById(req.params.id)
+  const message = course.messages.find(
+    (message) => message._id.toString() === req.params.messageId
+  )
+  if (message.userId.toString() === res.locals.payload.id.toString()) {
+    await Course.findByIdAndUpdate(req.params.id, {
+      $pull: { messages: { _id: req.params.messageId } },
+    })
+  }
+  res.send(message)
+}
+
+
+exports.message_update_put = async (req,res)=>{
+  
+}
+
 exports.event_create_post = async (req, res) => {
   const newEvent = await Event.create(req.body)
   await Course.findByIdAndUpdate(req.params.id, {
